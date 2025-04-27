@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 # Cargar modelo
-model = joblib.load('reg_popularidad_Spotify.pkl')
+model = joblib.load('reg_popularidad.pkl')
 
 #Definición API Flask:
 app = Flask(__name__)
