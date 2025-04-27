@@ -1,12 +1,14 @@
-# -*- coding: utf-8 -*-
+# Importar librerias 
 from flask import Flask, request
 from flask_restx import Api, Resource, fields
 import joblib
+import pandas as pd
 import numpy as np
 
 # Cargar modelo
-model = joblib.load('reg_popularidad.pkl')
+model = joblib.load('reg_popularidad_Spotify.pkl')
 
+#Definición API Flask:
 app = Flask(__name__)
 api = Api(app, version='1.0', title='Popularity Prediction API',
           description='Predice la popularidad de canciones a partir de sus características')
@@ -38,13 +40,14 @@ resource_fields = api.model('Output', {
 
 @ns.route('/')
 class PopularityApi(Resource):
-    @ns.expect(input_model)
+    @ns.doc(params={k: 'Input feature' for k in input_model.keys()})
     @ns.marshal_with(resource_fields)
-    def post(self):
-        data = request.json
-        features = np.array([list(data.values())]).astype(float)
+    def get(self):
+        # Leer desde parámetros de URL
+        data = {k: float(request.args.get(k)) for k in input_model.keys()}
+        features = np.array([list(data.values())])
         prediction = model.predict(features)[0]
         return {'Resultado Predicción': f'{prediction:.2f}'}, 200
-    
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
