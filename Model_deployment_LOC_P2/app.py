@@ -13,7 +13,7 @@ binarizer = joblib.load("binarizer.pkl")
 #Definición API Flask:
 app = Flask(__name__)
 api = Api(app, version='1.0', title='Genres Prediction API',
-          description='Predice el género de las películas a partir de sus características')
+          description='Predice el género de las películas a partir de sus características', mask=None, mask=None)
 
 ns = api.namespace('Predict', description='Modelo de clasificación')
 
